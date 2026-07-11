@@ -1,0 +1,31 @@
+namespace Eccelerators.BitTwiddling.Tests.Encoding
+
+using Eccelerators.BitTwiddling.Encoding
+
+@Test
+component BitEncodingTest
+{
+    @Test
+    fn TestGrayCode()
+    {
+        assert WordEncoding32.BinaryToGray(0 as uint) == (0 as uint)
+        assert WordEncoding32.BinaryToGray(1 as uint) == (1 as uint)
+        assert WordEncoding32.BinaryToGray(2 as uint) == (3 as uint)
+        assert WordEncoding32.BinaryToGray(3 as uint) == (2 as uint)
+        var gray: uint = WordEncoding32.BinaryToGray(0x12345678)
+        assert WordEncoding32.GrayToBinary(gray) == (0x12345678 as uint)
+    }
+
+    @Test
+    fn TestOneHot()
+    {
+        assert WordEncoding32.IsOneHot(0 as uint) == false
+        assert WordEncoding32.IsOneHot(0x80000000) == true
+        assert WordEncoding32.IsOneHot(3 as uint) == false
+        assert WordEncoding32.IsOneHotOrZero(0 as uint) == true
+        assert WordEncoding32.IndexToOneHot(5) == (0x20 as uint)
+        assert WordEncoding32.IndexToOneHot(32) == (0 as uint)
+        assert WordEncoding32.OneHotToIndex(0x80000000) == 31
+        assert WordEncoding32.OneHotToIndex(3 as uint) == -1
+    }
+}

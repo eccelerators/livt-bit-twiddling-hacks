@@ -1,0 +1,30 @@
+[project]
+name = "Eccelerators.BitTwiddling"
+version = "0.1.0"
+path = "src"
+outdir = "out"
+
+[tests]
+path = "tests"
+components = [
+    "IntegerPropertiesTest",
+    "BitMasksTest",
+    "BitCountingTest",
+    "BitScanningTest",
+    "BitPermutationTest",
+    "MortonCodesTest",
+    "BytePredicatesTest",
+    "ModulusTest",
+    "ByteOperationsTest",
+    "BitEncodingTest",
+    "SaturatingArithmeticTest"
+]
+
+[dependencies]
+Livt.Base = "0.1.1"
+
+[build.debug]
+warnings = ["all"]
+
+[build.release]
+warnings = ["all"]

@@ -1,0 +1,32 @@
+namespace Eccelerators.BitTwiddling.Arithmetic
+
+/**
+ * Division-free remainder operations for power-of-two divisors.
+ */
+class Modulus
+{
+    /**
+     * Computes value modulo 2^power.
+     * Power 0 returns 0; powers of 32 or more return value.
+     */
+    public static fn ModuloPowerOfTwo[](value: uint, power: int) uint
+    {
+        if (power <= 0)
+        {
+            return 0
+        }
+
+        if (power >= 32)
+        {
+            return value
+        }
+
+        var mask: uint = ((1 as uint) << power) - (1 as uint)
+        return value & mask
+    }
+
+    public static fn IsDivisibleByPowerOfTwo[](value: uint, power: int) bool
+    {
+        return Modulus.ModuloPowerOfTwo(value, power) == (0 as uint)
+    }
+}

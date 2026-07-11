@@ -1,0 +1,19 @@
+namespace Eccelerators.BitTwiddling.Tests.Arithmetic
+
+using Eccelerators.BitTwiddling.Arithmetic
+
+@Test
+component ModulusTest
+{
+    @Test
+    fn TestModuloPowerOfTwo()
+    {
+        assert Modulus.ModuloPowerOfTwo(123, 0) == (0 as uint)
+        assert Modulus.ModuloPowerOfTwo(123, 1) == (1 as uint)
+        assert Modulus.ModuloPowerOfTwo(123, 3) == (3 as uint)
+        assert Modulus.ModuloPowerOfTwo(0x12345678, 8) == (0x78 as uint)
+        assert Modulus.ModuloPowerOfTwo(0x12345678, 32) == (0x12345678 as uint)
+        assert Modulus.IsDivisibleByPowerOfTwo(0x120, 5) == true
+        assert Modulus.IsDivisibleByPowerOfTwo(0x121, 5) == false
+    }
+}

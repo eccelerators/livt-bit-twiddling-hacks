@@ -1,0 +1,63 @@
+namespace Eccelerators.BitTwiddling.Encoding
+
+/**
+ * Common binary encodings used in FPGA datapaths and control logic.
+ */
+class WordEncoding32
+{
+    public static fn BinaryToGray[](value: uint) uint
+    {
+        return value ^ (value >> 1)
+    }
+
+    public static fn GrayToBinary[](value: uint) uint
+    {
+        var result: uint = value
+        result = result ^ (result >> 16)
+        result = result ^ (result >> 8)
+        result = result ^ (result >> 4)
+        result = result ^ (result >> 2)
+        result = result ^ (result >> 1)
+        return result
+    }
+
+    public static fn IsOneHot[](value: uint) bool
+    {
+        return (value != (0 as uint)) &&
+            ((value & (value - (1 as uint))) == (0 as uint))
+    }
+
+    public static fn IsOneHotOrZero[](value: uint) bool
+    {
+        return (value == (0 as uint)) ||
+            ((value & (value - (1 as uint))) == (0 as uint))
+    }
+
+    /** Returns zero for indices outside 0 through 31. */
+    public static fn IndexToOneHot[](index: int) uint
+    {
+        if ((index < 0) || (index > 31))
+        {
+            return 0
+        }
+        return (1 as uint) << index
+    }
+
+    /** Returns -1 unless value contains exactly one set bit. */
+    public static fn OneHotToIndex[](value: uint) int
+    {
+        if (!WordEncoding32.IsOneHot(value))
+        {
+            return -1
+        }
+
+        var workingValue: uint = value
+        var index: int = 0
+        while (workingValue > (1 as uint))
+        {
+            workingValue = workingValue >> 1
+            index = index + 1
+        }
+        return index
+    }
+}

@@ -1,0 +1,19 @@
+namespace Eccelerators.BitTwiddling.Tests.Permutation
+
+using Eccelerators.BitTwiddling.Permutation
+
+@Test
+component MortonCodesTest
+{
+    @Test
+    fn TestInterleave16()
+    {
+        assert MortonCodes.Interleave16(0, 0) == (0 as uint)
+        assert MortonCodes.Interleave16(1, 0) == (1 as uint)
+        assert MortonCodes.Interleave16(0, 1) == (2 as uint)
+        assert MortonCodes.Interleave16(1, 1) == (3 as uint)
+        assert MortonCodes.Interleave16(0xFFFF, 0) == (0x55555555 as uint)
+        assert MortonCodes.Interleave16(0, 0xFFFF) == (0xAAAAAAAA as uint)
+        assert MortonCodes.Interleave16(0xFFFF, 0xFFFF) == (0xFFFFFFFF as uint)
+    }
+}

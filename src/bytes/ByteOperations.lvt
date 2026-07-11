@@ -1,0 +1,40 @@
+namespace Eccelerators.BitTwiddling.Bytes
+
+/**
+ * Indexed byte access for unsigned 32-bit words.
+ */
+class ByteOperations
+{
+    /** Returns zero when index is outside 0 through 3. */
+    public static fn GetByte[](value: uint, index: int) byte
+    {
+        if ((index < 0) || (index > 3))
+        {
+            return 0x00
+        }
+
+        var distance: int = index * 8
+        return ((value >> distance) & (0xFF as uint)) as byte
+    }
+
+    /** Invalid indices preserve value. */
+    public static fn SetByte[](value: uint, index: int, byteValue: byte) uint
+    {
+        if ((index < 0) || (index > 3))
+        {
+            return value
+        }
+
+        var distance: int = index * 8
+        var mask: uint = (0xFF as uint) << distance
+        var positionedValue: uint = (byteValue as uint) << distance
+        return (value & ~mask) | positionedValue
+    }
+
+    public static fn ByteSwap16[](value: uint) uint
+    {
+        var lowWord: uint = value & (0xFFFF as uint)
+        return ((lowWord & (0x00FF as uint)) << 8) |
+            ((lowWord & (0xFF00 as uint)) >> 8)
+    }
+}

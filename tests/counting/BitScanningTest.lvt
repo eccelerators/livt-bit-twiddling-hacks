@@ -1,0 +1,41 @@
+namespace Eccelerators.BitTwiddling.Tests.Counting
+
+using Eccelerators.BitTwiddling.Counting
+
+@Test
+component BitScanningTest
+{
+    @Test
+    fn TestLog2Floor()
+    {
+        assert BitScanning.Log2Floor(0) == -1
+        assert BitScanning.Log2Floor(1) == 0
+        assert BitScanning.Log2Floor(2) == 1
+        assert BitScanning.Log2Floor(3) == 1
+        assert BitScanning.Log2Floor(0x80000000) == 31
+        assert BitScanning.Log2Floor(0xFFFFFFFF) == 31
+    }
+
+    @Test
+    fn TestCountTrailingZeros()
+    {
+        assert BitScanning.CountTrailingZeros(0) == 32
+        assert BitScanning.CountTrailingZeros(1) == 0
+        assert BitScanning.CountTrailingZeros(8) == 3
+        assert BitScanning.CountTrailingZeros(0x00010000) == 16
+        assert BitScanning.CountTrailingZeros(0x80000000) == 31
+    }
+
+    @Test
+    fn TestLeadingZerosAndBitPositions()
+    {
+        assert BitScanning.CountLeadingZeros(0) == 32
+        assert BitScanning.CountLeadingZeros(1) == 31
+        assert BitScanning.CountLeadingZeros(0x00010000) == 15
+        assert BitScanning.CountLeadingZeros(0x80000000) == 0
+        assert BitScanning.HighestSetBit(0) == -1
+        assert BitScanning.HighestSetBit(0x00100800) == 20
+        assert BitScanning.LowestSetBit(0) == -1
+        assert BitScanning.LowestSetBit(0x00100800) == 11
+    }
+}

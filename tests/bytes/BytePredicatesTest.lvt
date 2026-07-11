@@ -1,0 +1,26 @@
+namespace Eccelerators.BitTwiddling.Tests.Bytes
+
+using Eccelerators.BitTwiddling.Bytes
+
+@Test
+component BytePredicatesTest
+{
+    @Test
+    fn TestZeroBytes()
+    {
+        assert BytePredicates.HasZeroByte(0x12345678) == false
+        assert BytePredicates.HasZeroByte(0x12340078) == true
+        assert BytePredicates.HasZeroByte(0) == true
+        assert BytePredicates.CountZeroBytes(0x12345678) == 0
+        assert BytePredicates.CountZeroBytes(0x12003400) == 2
+        assert BytePredicates.CountZeroBytes(0) == 4
+    }
+
+    @Test
+    fn TestByteEquality()
+    {
+        assert BytePredicates.HasByteEqual(0x12345678, 0x34) == true
+        assert BytePredicates.HasByteEqual(0x12345678, 0x12) == true
+        assert BytePredicates.HasByteEqual(0x12345678, 0xFF) == false
+    }
+}

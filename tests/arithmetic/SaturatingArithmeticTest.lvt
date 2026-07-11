@@ -1,0 +1,27 @@
+namespace Eccelerators.BitTwiddling.Tests.Arithmetic
+
+using Eccelerators.BitTwiddling.Arithmetic
+
+@Test
+component SaturatingArithmeticTest
+{
+    @Test
+    fn TestSaturation()
+    {
+        assert SaturatingArithmetic.AddUnsigned(10, 20) == (30 as uint)
+        assert SaturatingArithmetic.AddUnsigned(0xFFFFFFFF, 1) == (0xFFFFFFFF as uint)
+        assert SaturatingArithmetic.SubtractUnsigned(20, 10) == (10 as uint)
+        assert SaturatingArithmetic.SubtractUnsigned(10, 20) == (0 as uint)
+    }
+
+    @Test
+    fn TestCarryAndBorrow()
+    {
+        assert SaturatingArithmetic.AddWrapping(0xFFFFFFFF, 1) == (0 as uint)
+        assert SaturatingArithmetic.HasAdditionCarry(0xFFFFFFFF, 1) == true
+        assert SaturatingArithmetic.HasAdditionCarry(10, 20) == false
+        assert SaturatingArithmetic.SubtractWrapping(0, 1) == (0xFFFFFFFF as uint)
+        assert SaturatingArithmetic.HasSubtractionBorrow(0, 1) == true
+        assert SaturatingArithmetic.HasSubtractionBorrow(20, 10) == false
+    }
+}

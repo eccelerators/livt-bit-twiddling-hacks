@@ -1,0 +1,46 @@
+namespace Eccelerators.BitTwiddling.Bytes
+
+/**
+ * Tests the four bytes of a 32-bit word independently.
+ */
+class BytePredicates
+{
+    public static fn HasZeroByte[](value: uint) bool
+    {
+        return ((value & (0xFF as uint)) == (0 as uint)) ||
+            (((value >> 8) & (0xFF as uint)) == (0 as uint)) ||
+            (((value >> 16) & (0xFF as uint)) == (0 as uint)) ||
+            (((value >> 24) & (0xFF as uint)) == (0 as uint))
+    }
+
+    public static fn HasByteEqual[](value: uint, expected: byte) bool
+    {
+        var expectedValue: uint = expected as uint
+        return ((value & (0xFF as uint)) == expectedValue) ||
+            (((value >> 8) & (0xFF as uint)) == expectedValue) ||
+            (((value >> 16) & (0xFF as uint)) == expectedValue) ||
+            (((value >> 24) & (0xFF as uint)) == expectedValue)
+    }
+
+    public static fn CountZeroBytes[](value: uint) int
+    {
+        var count: int = 0
+        if ((value & (0xFF as uint)) == (0 as uint))
+        {
+            count = count + 1
+        }
+        if (((value >> 8) & (0xFF as uint)) == (0 as uint))
+        {
+            count = count + 1
+        }
+        if (((value >> 16) & (0xFF as uint)) == (0 as uint))
+        {
+            count = count + 1
+        }
+        if (((value >> 24) & (0xFF as uint)) == (0 as uint))
+        {
+            count = count + 1
+        }
+        return count
+    }
+}

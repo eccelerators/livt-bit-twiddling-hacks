@@ -1,0 +1,26 @@
+namespace Eccelerators.BitTwiddling.Tests.Bytes
+
+using Eccelerators.BitTwiddling.Bytes
+
+@Test
+component ByteOperationsTest
+{
+    @Test
+    fn TestGetAndSetByte()
+    {
+        assert ByteOperations.GetByte(0x12345678, 0) == 0x78
+        assert ByteOperations.GetByte(0x12345678, 1) == 0x56
+        assert ByteOperations.GetByte(0x12345678, 2) == 0x34
+        assert ByteOperations.GetByte(0x12345678, 3) == 0x12
+        assert ByteOperations.GetByte(0x12345678, 4) == 0x00
+        assert ByteOperations.SetByte(0x12345678, 1, 0xAB) == (0x1234AB78 as uint)
+        assert ByteOperations.SetByte(0x12345678, -1, 0xAB) == (0x12345678 as uint)
+    }
+
+    @Test
+    fn TestByteSwap16()
+    {
+        assert ByteOperations.ByteSwap16(0x1234) == (0x3412 as uint)
+        assert ByteOperations.ByteSwap16(0xABCD1234) == (0x3412 as uint)
+    }
+}

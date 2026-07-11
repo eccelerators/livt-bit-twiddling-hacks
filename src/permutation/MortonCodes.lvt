@@ -1,0 +1,25 @@
+namespace Eccelerators.BitTwiddling.Permutation
+
+/**
+ * Creates two-dimensional Morton codes by interleaving 16-bit coordinates.
+ */
+class MortonCodes
+{
+    public static fn Interleave16[](xValue: uint, yValue: uint) uint
+    {
+        var x: uint = xValue & (0x0000FFFF as uint)
+        var y: uint = yValue & (0x0000FFFF as uint)
+
+        x = (x | (x << 8)) & (0x00FF00FF as uint)
+        x = (x | (x << 4)) & (0x0F0F0F0F as uint)
+        x = (x | (x << 2)) & (0x33333333 as uint)
+        x = (x | (x << 1)) & (0x55555555 as uint)
+
+        y = (y | (y << 8)) & (0x00FF00FF as uint)
+        y = (y | (y << 4)) & (0x0F0F0F0F as uint)
+        y = (y | (y << 2)) & (0x33333333 as uint)
+        y = (y | (y << 1)) & (0x55555555 as uint)
+
+        return x | (y << 1)
+    }
+}

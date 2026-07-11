@@ -1,0 +1,47 @@
+namespace Eccelerators.BitTwiddling.Arithmetic
+
+/**
+ * Fixed-width arithmetic with explicit overflow and carry behavior.
+ */
+class SaturatingArithmetic
+{
+    public static fn AddUnsigned[](x: uint, y: uint) uint
+    {
+        var result: uint = x + y
+        if (result < x)
+        {
+            return 0xFFFFFFFF
+        }
+        return result
+    }
+
+    public static fn SubtractUnsigned[](x: uint, y: uint) uint
+    {
+        if (x < y)
+        {
+            return 0
+        }
+        return x - y
+    }
+
+    public static fn AddWrapping[](x: uint, y: uint) uint
+    {
+        return x + y
+    }
+
+    public static fn HasAdditionCarry[](x: uint, y: uint) bool
+    {
+        var result: uint = x + y
+        return result < x
+    }
+
+    public static fn SubtractWrapping[](x: uint, y: uint) uint
+    {
+        return x - y
+    }
+
+    public static fn HasSubtractionBorrow[](x: uint, y: uint) bool
+    {
+        return x < y
+    }
+}

@@ -1,0 +1,61 @@
+namespace Eccelerators.BitTwiddling.Counting
+
+/**
+ * Population count and parity implementations for 32-bit words.
+ */
+class BitCounting
+{
+    /** Recommended fixed-latency population count implementation. */
+    public static fn PopCount[](value: uint) int
+    {
+        var workingValue: uint = value
+        workingValue = workingValue -
+            ((workingValue >> 1) & (0x55555555 as uint))
+        workingValue = (workingValue & (0x33333333 as uint)) +
+            ((workingValue >> 2) & (0x33333333 as uint))
+        workingValue = (workingValue + (workingValue >> 4)) &
+            (0x0F0F0F0F as uint)
+        workingValue = workingValue + (workingValue >> 8)
+        workingValue = workingValue + (workingValue >> 16)
+        return (workingValue & (0x3F as uint)) as int
+    }
+
+    public static fn PopCountIterative[](value: uint) int
+    {
+        var workingValue: uint = value
+        var count: int = 0
+
+        while (workingValue != (0 as uint))
+        {
+            workingValue = workingValue & (workingValue - (1 as uint))
+            count = count + 1
+        }
+
+        return count
+    }
+
+    public static fn PopCountParallel[](value: uint) int
+    {
+        var workingValue: uint = value
+        workingValue = workingValue -
+            ((workingValue >> 1) & (0x55555555 as uint))
+        workingValue = (workingValue & (0x33333333 as uint)) +
+            ((workingValue >> 2) & (0x33333333 as uint))
+        workingValue = (workingValue + (workingValue >> 4)) &
+            (0x0F0F0F0F as uint)
+        workingValue = workingValue + (workingValue >> 8)
+        workingValue = workingValue + (workingValue >> 16)
+        return (workingValue & (0x3F as uint)) as int
+    }
+
+    public static fn HasOddParity[](value: uint) bool
+    {
+        var folded: uint = value
+        folded = folded ^ (folded >> 16)
+        folded = folded ^ (folded >> 8)
+        folded = folded ^ (folded >> 4)
+        folded = folded ^ (folded >> 2)
+        folded = folded ^ (folded >> 1)
+        return (folded & (1 as uint)) != (0 as uint)
+    }
+}

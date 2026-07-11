@@ -1,0 +1,69 @@
+namespace Eccelerators.BitTwiddling.Permutation
+
+/**
+ * Fixed permutations of bits and bytes in a 32-bit word.
+ */
+class BitPermutation
+{
+    /** Invalid distances preserve value. */
+    public static fn RotateLeft32[](value: uint, distance: int) uint
+    {
+        if ((distance < 0) || (distance > 31))
+        {
+            return value
+        }
+        if (distance == 0)
+        {
+            return value
+        }
+        return (value << distance) | (value >> (32 - distance))
+    }
+
+    /** Invalid distances preserve value. */
+    public static fn RotateRight32[](value: uint, distance: int) uint
+    {
+        if ((distance < 0) || (distance > 31))
+        {
+            return value
+        }
+        if (distance == 0)
+        {
+            return value
+        }
+        return (value >> distance) | (value << (32 - distance))
+    }
+
+    public static fn Reverse32[](value: uint) uint
+    {
+        var result: uint = value
+        result = ((result >> 1) & (0x55555555 as uint)) |
+            ((result & (0x55555555 as uint)) << 1)
+        result = ((result >> 2) & (0x33333333 as uint)) |
+            ((result & (0x33333333 as uint)) << 2)
+        result = ((result >> 4) & (0x0F0F0F0F as uint)) |
+            ((result & (0x0F0F0F0F as uint)) << 4)
+        result = ((result >> 8) & (0x00FF00FF as uint)) |
+            ((result & (0x00FF00FF as uint)) << 8)
+        return (result >> 16) | (result << 16)
+    }
+
+    public static fn ReverseByte[](value: byte) byte
+    {
+        var result: uint = value as uint
+        result = ((result >> 1) & (0x55 as uint)) |
+            ((result & (0x55 as uint)) << 1)
+        result = ((result >> 2) & (0x33 as uint)) |
+            ((result & (0x33 as uint)) << 2)
+        result = ((result >> 4) & (0x0F as uint)) |
+            ((result & (0x0F as uint)) << 4)
+        return result as byte
+    }
+
+    public static fn ByteSwap32[](value: uint) uint
+    {
+        return ((value & (0x000000FF as uint)) << 24) |
+            ((value & (0x0000FF00 as uint)) << 8) |
+            ((value & (0x00FF0000 as uint)) >> 8) |
+            ((value & (0xFF000000 as uint)) >> 24)
+    }
+}

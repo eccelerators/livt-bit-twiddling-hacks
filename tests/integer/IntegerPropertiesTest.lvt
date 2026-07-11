@@ -1,0 +1,55 @@
+namespace Eccelerators.BitTwiddling.Tests.Integer
+
+using Eccelerators.BitTwiddling.Integer
+
+@Test
+component IntegerPropertiesTest
+{
+    @Test
+    fn TestSignsAndMagnitude()
+    {
+        assert IntegerProperties.SignMask(123) == 0
+        assert IntegerProperties.SignMask(-123) == -1
+        assert IntegerProperties.HaveOppositeSigns(-1, 1) == true
+        assert IntegerProperties.HaveOppositeSigns(-1, -2) == false
+        assert IntegerProperties.AbsoluteValueBits(123) == (123 as uint)
+        assert IntegerProperties.AbsoluteValueBits(-123) == (123 as uint)
+        assert IntegerProperties.AbsoluteValueBits(-2147483648) == (0x80000000 as uint)
+    }
+
+    @Test
+    fn TestMinimumAndMaximum()
+    {
+        assert IntegerProperties.Minimum(-4, 9) == -4
+        assert IntegerProperties.Minimum(7, 7) == 7
+        assert IntegerProperties.Maximum(-4, 9) == 9
+        assert IntegerProperties.Maximum(7, 7) == 7
+    }
+
+    @Test
+    fn TestPowersOfTwo()
+    {
+        assert IntegerProperties.IsPowerOfTwo(0 as uint) == false
+        assert IntegerProperties.IsPowerOfTwo(1 as uint) == true
+        assert IntegerProperties.IsPowerOfTwo(1024 as uint) == true
+        assert IntegerProperties.IsPowerOfTwo(1023 as uint) == false
+        assert IntegerProperties.IsPowerOfTwo(0x80000000) == true
+
+        assert IntegerProperties.RoundUpToPowerOfTwo(0 as uint) == (1 as uint)
+        assert IntegerProperties.RoundUpToPowerOfTwo(1 as uint) == (1 as uint)
+        assert IntegerProperties.RoundUpToPowerOfTwo(5 as uint) == (8 as uint)
+        assert IntegerProperties.RoundUpToPowerOfTwo(0x80000000) == (0x80000000 as uint)
+        assert IntegerProperties.RoundUpToPowerOfTwo(0x80000001) == (0 as uint)
+    }
+
+    @Test
+    fn TestSignExtension()
+    {
+        assert IntegerProperties.SignExtend(0x0D as uint, 4) == -3
+        assert IntegerProperties.SignExtend(0x05 as uint, 4) == 5
+        assert IntegerProperties.SignExtend(0xFF, 8) == -1
+        assert IntegerProperties.SignExtend(0x80000000, 32) == -2147483648
+        assert IntegerProperties.SignExtend(1 as uint, 0) == 0
+        assert IntegerProperties.SignExtend(1 as uint, 33) == 0
+    }
+}

@@ -1,0 +1,160 @@
+namespace Eccelerators.BitTwiddling.Counting
+
+/**
+ * Locates significant bits in unsigned 32-bit values.
+ */
+class BitScanning
+{
+    /** Returns 32 for zero. */
+    public static fn CountLeadingZeros[](value: uint) int
+    {
+        if (value == (0 as uint))
+        {
+            return 32
+        }
+
+        var workingValue: uint = value
+        var count: int = 0
+
+        if (workingValue <= (0x0000FFFF as uint))
+        {
+            workingValue = workingValue << 16
+            count = count + 16
+        }
+        if (workingValue <= (0x00FFFFFF as uint))
+        {
+            workingValue = workingValue << 8
+            count = count + 8
+        }
+        if (workingValue <= (0x0FFFFFFF as uint))
+        {
+            workingValue = workingValue << 4
+            count = count + 4
+        }
+        if (workingValue <= (0x3FFFFFFF as uint))
+        {
+            workingValue = workingValue << 2
+            count = count + 2
+        }
+        if (workingValue <= (0x7FFFFFFF as uint))
+        {
+            count = count + 1
+        }
+
+        return count
+    }
+
+    /** Returns -1 when value is zero. */
+    public static fn HighestSetBit[](value: uint) int
+    {
+        if (value == (0 as uint))
+        {
+            return -1
+        }
+
+        var workingValue: uint = value
+        var result: int = 0
+        while (workingValue > (1 as uint))
+        {
+            workingValue = workingValue >> 1
+            result = result + 1
+        }
+        return result
+    }
+
+    /** Returns -1 when value is zero. */
+    public static fn LowestSetBit[](value: uint) int
+    {
+        if (value == (0 as uint))
+        {
+            return -1
+        }
+
+        var workingValue: uint = value
+        var result: int = 0
+        while ((workingValue & (1 as uint)) == (0 as uint))
+        {
+            workingValue = workingValue >> 1
+            result = result + 1
+        }
+        return result
+    }
+
+    /** Returns -1 for zero, otherwise floor(log2(value)). */
+    public static fn Log2Floor[](value: uint) int
+    {
+        if (value == (0 as uint))
+        {
+            return -1
+        }
+
+        var workingValue: uint = value
+        var result: int = 0
+
+        if (workingValue >= (0x00010000 as uint))
+        {
+            workingValue = workingValue >> 16
+            result = result + 16
+        }
+        if (workingValue >= (0x00000100 as uint))
+        {
+            workingValue = workingValue >> 8
+            result = result + 8
+        }
+        if (workingValue >= (0x00000010 as uint))
+        {
+            workingValue = workingValue >> 4
+            result = result + 4
+        }
+        if (workingValue >= (0x00000004 as uint))
+        {
+            workingValue = workingValue >> 2
+            result = result + 2
+        }
+        if (workingValue >= (0x00000002 as uint))
+        {
+            result = result + 1
+        }
+
+        return result
+    }
+
+    /** Returns 32 for zero. */
+    public static fn CountTrailingZeros[](value: uint) int
+    {
+        if (value == (0 as uint))
+        {
+            return 32
+        }
+
+        var workingValue: uint = value
+        var count: int = 0
+
+        if ((workingValue & (0x0000FFFF as uint)) == (0 as uint))
+        {
+            workingValue = workingValue >> 16
+            count = count + 16
+        }
+        if ((workingValue & (0x000000FF as uint)) == (0 as uint))
+        {
+            workingValue = workingValue >> 8
+            count = count + 8
+        }
+        if ((workingValue & (0x0000000F as uint)) == (0 as uint))
+        {
+            workingValue = workingValue >> 4
+            count = count + 4
+        }
+        if ((workingValue & (0x00000003 as uint)) == (0 as uint))
+        {
+            workingValue = workingValue >> 2
+            count = count + 2
+        }
+        if ((workingValue & (1 as uint)) == (0 as uint))
+        {
+            count = count + 1
+        }
+
+        return count
+    }
+}

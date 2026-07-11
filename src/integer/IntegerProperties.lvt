@@ -1,0 +1,96 @@
+namespace Eccelerators.BitTwiddling.Integer
+
+/**
+ * Properties and transformations of signed and unsigned 32-bit integers.
+ */
+class IntegerProperties
+{
+    public static fn SignMask[](value: int) int
+    {
+        return value >> 31
+    }
+
+    public static fn HaveOppositeSigns[](x: int, y: int) bool
+    {
+        return (x ^ y) < 0
+    }
+
+    public static fn AbsoluteValueBits[](value: int) uint
+    {
+        var mask: int = value >> 31
+        return ((value + mask) ^ mask) as uint
+    }
+
+    public static fn Minimum[](x: int, y: int) int
+    {
+        if (x < y)
+        {
+            return x
+        }
+
+        return y
+    }
+
+    public static fn Maximum[](x: int, y: int) int
+    {
+        if (x > y)
+        {
+            return x
+        }
+
+        return y
+    }
+
+    public static fn IsPowerOfTwo[](value: uint) bool
+    {
+        return (value != (0 as uint)) &&
+            ((value & (value - (1 as uint))) == (0 as uint))
+    }
+
+    /**
+     * Returns the next power of two at or above value.
+     * Returns 1 for zero and 0 when the mathematical result exceeds 32 bits.
+     */
+    public static fn RoundUpToPowerOfTwo[](value: uint) uint
+    {
+        if (value == (0 as uint))
+        {
+            return 1
+        }
+
+        if (value > (0x80000000 as uint))
+        {
+            return 0
+        }
+
+        var workingValue: uint = value - (1 as uint)
+        workingValue = workingValue | (workingValue >> 1)
+        workingValue = workingValue | (workingValue >> 2)
+        workingValue = workingValue | (workingValue >> 4)
+        workingValue = workingValue | (workingValue >> 8)
+        workingValue = workingValue | (workingValue >> 16)
+        return workingValue + (1 as uint)
+    }
+
+    /**
+     * Sign-extends the low bitWidth bits of value to a 32-bit int.
+     * Valid widths are 1 through 32; invalid widths return 0.
+     */
+    public static fn SignExtend[](value: uint, bitWidth: int) int
+    {
+        if ((bitWidth < 1) || (bitWidth > 32))
+        {
+            return 0
+        }
+
+        if (bitWidth == 32)
+        {
+            return value as int
+        }
+
+        var signBit: uint = (1 as uint) << (bitWidth - 1)
+        var widthMask: uint = ((1 as uint) << bitWidth) - (1 as uint)
+        var maskedValue: uint = value & widthMask
+        return ((maskedValue ^ signBit) - signBit) as int
+    }
+}

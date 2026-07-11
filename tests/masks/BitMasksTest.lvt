@@ -1,0 +1,33 @@
+namespace Eccelerators.BitTwiddling.Tests.Masks
+
+using Eccelerators.BitTwiddling.Masks
+
+@Test
+component BitMasksTest
+{
+    @Test
+    fn TestMergeAndConditionalMask()
+    {
+        assert BitMasks.IsAnySet(0x10, 0x18) == true
+        assert BitMasks.IsAnySet(0x10, 0x03) == false
+        assert BitMasks.AreAllSet(0x1F, 0x0F) == true
+        assert BitMasks.AreAllSet(0x17, 0x0F) == false
+        assert BitMasks.Set(0x10, 0x03) == (0x13 as uint)
+        assert BitMasks.Clear(0x13, 0x03) == (0x10 as uint)
+        assert BitMasks.Toggle(0x15, 0x0F) == (0x1A as uint)
+        assert BitMasks.Merge(0xAAAA0000, 0x00005555, 0x00FF00FF) == (0xAA000055 as uint)
+        assert BitMasks.SetOrClear(0x10, 0x03, true) == (0x13 as uint)
+        assert BitMasks.SetOrClear(0x13, 0x03, false) == (0x10 as uint)
+    }
+
+    @Test
+    fn TestExtractAndInsert()
+    {
+        assert BitMasks.Extract(0x1234ABCD, 8, 8) == (0xAB as uint)
+        assert BitMasks.Extract(0x1234ABCD, 0, 32) == (0x1234ABCD as uint)
+        assert BitMasks.Extract(0x1234ABCD, 30, 4) == (0 as uint)
+        assert BitMasks.Insert(0x12340078, 0xAB, 8, 8) == (0x1234AB78 as uint)
+        assert BitMasks.Insert(0x12345678, 0xFFFFFFFF, 0, 32) == (0xFFFFFFFF as uint)
+        assert BitMasks.Insert(0x12345678, 0, -1, 8) == (0x12345678 as uint)
+    }
+}
