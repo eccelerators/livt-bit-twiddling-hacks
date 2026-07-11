@@ -1,11 +1,19 @@
 namespace Eccelerators.BitTwiddling.Counting
 
 /**
- * Locates significant bits in unsigned 32-bit values.
+ * Locates significant bits and zero runs in unsigned 32-bit values.
+ *
+ * Bit positions use the least-significant-bit convention: bit 0 is the low
+ * bit and bit 31 is the high bit. Functions that cannot identify a set bit in
+ * zero return the documented sentinel rather than an ambiguous valid index.
  */
 class BitScanning
 {
-    /** Returns 32 for zero. */
+    /**
+     * Counts consecutive zero bits from bit 31 toward bit 0.
+     *
+     * The result ranges from 0 through 32. A zero input returns 32.
+     */
     public static fn CountLeadingZeros[](value: uint) int
     {
         if (value == (0 as uint))
@@ -44,7 +52,11 @@ class BitScanning
         return count
     }
 
-    /** Returns -1 when value is zero. */
+    /**
+     * Returns the index of value's most-significant set bit.
+     *
+     * Valid indices range from 0 through 31. A zero input returns -1.
+     */
     public static fn HighestSetBit[](value: uint) int
     {
         if (value == (0 as uint))
@@ -62,7 +74,11 @@ class BitScanning
         return result
     }
 
-    /** Returns -1 when value is zero. */
+    /**
+     * Returns the index of value's least-significant set bit.
+     *
+     * Valid indices range from 0 through 31. A zero input returns -1.
+     */
     public static fn LowestSetBit[](value: uint) int
     {
         if (value == (0 as uint))
@@ -80,7 +96,12 @@ class BitScanning
         return result
     }
 
-    /** Returns -1 for zero, otherwise floor(log2(value)). */
+    /**
+     * Returns floor(log2(value)), which is also the highest set-bit index.
+     *
+     * Positive inputs return a result from 0 through 31. Zero returns -1.
+     * This implementation uses a fixed five-stage binary search.
+     */
     public static fn Log2Floor[](value: uint) int
     {
         if (value == (0 as uint))
@@ -119,7 +140,11 @@ class BitScanning
         return result
     }
 
-    /** Returns 32 for zero. */
+    /**
+     * Counts consecutive zero bits from bit 0 toward bit 31.
+     *
+     * The result ranges from 0 through 32. A zero input returns 32.
+     */
     public static fn CountTrailingZeros[](value: uint) int
     {
         if (value == (0 as uint))

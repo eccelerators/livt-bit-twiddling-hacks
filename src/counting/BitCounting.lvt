@@ -1,11 +1,20 @@
 namespace Eccelerators.BitTwiddling.Counting
 
 /**
- * Population count and parity implementations for 32-bit words.
+ * Provides population-count and parity operations for unsigned 32-bit words.
+ *
+ * PopCount is the recommended library entry point. The explicitly named
+ * iterative and parallel variants remain public for migration examples and
+ * for comparing the hardware structures produced from each algorithm.
  */
 class BitCounting
 {
-    /** Recommended fixed-latency population count implementation. */
+    /**
+     * Counts the set bits in value and returns a result from 0 through 32.
+     *
+     * This recommended implementation uses a fixed sequence of mask, shift,
+     * and add stages, so its source-level work does not depend on the input.
+     */
     public static fn PopCount[](value: uint) int
     {
         var workingValue: uint = value
@@ -20,6 +29,12 @@ class BitCounting
         return (workingValue & (0x3F as uint)) as int
     }
 
+    /**
+     * Counts the set bits in value using Brian Kernighan's iterative method.
+     *
+     * Each iteration clears one set bit. The iteration count therefore equals
+     * the returned population count and ranges from 0 through 32.
+     */
     public static fn PopCountIterative[](value: uint) int
     {
         var workingValue: uint = value
@@ -34,6 +49,12 @@ class BitCounting
         return count
     }
 
+    /**
+     * Counts the set bits in value with a parallel mask-and-add reduction.
+     *
+     * This educational variant currently has the same implementation as the
+     * recommended PopCount API and returns a value from 0 through 32.
+     */
     public static fn PopCountParallel[](value: uint) int
     {
         var workingValue: uint = value
@@ -48,6 +69,12 @@ class BitCounting
         return (workingValue & (0x3F as uint)) as int
     }
 
+    /**
+     * Returns true when value contains an odd number of set bits.
+     *
+     * The implementation folds the word with XOR operations and does not
+     * compute the complete population count.
+     */
     public static fn HasOddParity[](value: uint) bool
     {
         var folded: uint = value

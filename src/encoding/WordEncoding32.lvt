@@ -1,15 +1,26 @@
 namespace Eccelerators.BitTwiddling.Encoding
 
 /**
- * Common binary encodings used in FPGA datapaths and control logic.
+ * Provides Gray-code and one-hot conversions for unsigned 32-bit words.
+ *
+ * The helpers only transform values. Gray-code conversion does not provide the
+ * synchronization required to safely cross clock domains.
  */
 class WordEncoding32
 {
+    /**
+     * Converts a 32-bit binary value to reflected Gray code.
+     *
+     * Adjacent binary counter values produce Gray words differing in one bit.
+     */
     public static fn BinaryToGray[](value: uint) uint
     {
         return value ^ (value >> 1)
     }
 
+    /**
+     * Converts a reflected 32-bit Gray-code value back to binary.
+     */
     public static fn GrayToBinary[](value: uint) uint
     {
         var result: uint = value
@@ -21,19 +32,33 @@ class WordEncoding32
         return result
     }
 
+    /**
+     * Returns true when value contains exactly one set bit.
+     *
+     * Zero is not considered one-hot.
+     */
     public static fn IsOneHot[](value: uint) bool
     {
         return (value != (0 as uint)) &&
             ((value & (value - (1 as uint))) == (0 as uint))
     }
 
+    /**
+     * Returns true when value contains at most one set bit.
+     *
+     * Unlike IsOneHot, this predicate accepts zero.
+     */
     public static fn IsOneHotOrZero[](value: uint) bool
     {
         return (value == (0 as uint)) ||
             ((value & (value - (1 as uint))) == (0 as uint))
     }
 
-    /** Returns zero for indices outside 0 through 31. */
+    /**
+     * Converts a bit index into a 32-bit one-hot word.
+     *
+     * Valid indices are 0 through 31. An invalid index returns zero.
+     */
     public static fn IndexToOneHot[](index: int) uint
     {
         if ((index < 0) || (index > 31))
@@ -43,7 +68,12 @@ class WordEncoding32
         return (1 as uint) << index
     }
 
-    /** Returns -1 unless value contains exactly one set bit. */
+    /**
+     * Converts a one-hot word into its set-bit index.
+     *
+     * A valid one-hot input returns an index from 0 through 31. Zero and words
+     * containing multiple set bits return -1.
+     */
     public static fn OneHotToIndex[](value: uint) int
     {
         if (!WordEncoding32.IsOneHot(value))

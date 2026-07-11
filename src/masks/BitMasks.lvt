@@ -1,35 +1,61 @@
 namespace Eccelerators.BitTwiddling.Masks
 
 /**
- * Readable mask operations for reusable 32-bit datapaths.
+ * Provides readable mask and bit-field operations for unsigned 32-bit words.
+ *
+ * Offsets count from the least-significant bit. Field helpers validate ranges
+ * before shifting so callers receive deterministic invalid-input behavior.
  */
 class BitMasks
 {
+    /**
+     * Returns true when value and mask share at least one set bit.
+     */
     public static fn IsAnySet[](value: uint, mask: uint) bool
     {
         return (value & mask) != (0 as uint)
     }
 
+    /**
+     * Returns true when every bit selected by mask is set in value.
+     *
+     * An empty mask returns true because it imposes no required bits.
+     */
     public static fn AreAllSet[](value: uint, mask: uint) bool
     {
         return (value & mask) == mask
     }
 
+    /**
+     * Sets every bit selected by mask and preserves all other bits in value.
+     */
     public static fn Set[](value: uint, mask: uint) uint
     {
         return value | mask
     }
 
+    /**
+     * Clears every bit selected by mask and preserves all other bits in value.
+     */
     public static fn Clear[](value: uint, mask: uint) uint
     {
         return value & ~mask
     }
 
+    /**
+     * Inverts every bit selected by mask and preserves all other bits in value.
+     */
     public static fn Toggle[](value: uint, mask: uint) uint
     {
         return value ^ mask
     }
 
+    /**
+     * Merges two words under mask control.
+     *
+     * Set mask bits select from selectedValue. Clear mask bits select from
+     * defaultValue.
+     */
     public static fn Merge[](defaultValue: uint, selectedValue: uint, mask: uint) uint
     {
         var defaultBits: uint = defaultValue & ~mask
@@ -37,6 +63,9 @@ class BitMasks
         return defaultBits | selectedBits
     }
 
+    /**
+     * Sets mask bits when shouldSet is true and clears them otherwise.
+     */
     public static fn SetOrClear[](value: uint, mask: uint, shouldSet: bool) uint
     {
         if (shouldSet)
@@ -47,6 +76,12 @@ class BitMasks
         return value & ~mask
     }
 
+    /**
+     * Extracts width bits from value starting at offset and right-aligns them.
+     *
+     * Valid fields have offset from 0 through 31, width from 1 through 32, and
+     * offset + width no greater than 32. Invalid fields return zero.
+     */
     public static fn Extract[](value: uint, offset: int, width: int) uint
     {
         if ((offset < 0) || (width < 1) || (offset > 31) || (width > (32 - offset)))
@@ -63,6 +98,12 @@ class BitMasks
         return (value >> offset) & mask
     }
 
+    /**
+     * Replaces width bits in value starting at offset with fieldValue.
+     *
+     * Only the low width bits of fieldValue are inserted. Invalid field ranges
+     * return value unchanged.
+     */
     public static fn Insert[](value: uint, fieldValue: uint, offset: int, width: int) uint
     {
         if ((offset < 0) || (width < 1) || (offset > 31) || (width > (32 - offset)))

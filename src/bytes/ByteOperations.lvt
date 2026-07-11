@@ -1,11 +1,19 @@
 namespace Eccelerators.BitTwiddling.Bytes
 
 /**
- * Indexed byte access for unsigned 32-bit words.
+ * Provides indexed access to the four bytes of an unsigned 32-bit word.
+ *
+ * Byte index 0 selects bits 7 through 0 and byte index 3 selects bits 31
+ * through 24. This explicit little-endian index convention is independent of
+ * host memory layout because the operations work on values, not pointers.
  */
 class ByteOperations
 {
-    /** Returns zero when index is outside 0 through 3. */
+    /**
+     * Returns the byte at index from value.
+     *
+     * Valid indices are 0 through 3. An invalid index returns 0x00.
+     */
     public static fn GetByte[](value: uint, index: int) byte
     {
         if ((index < 0) || (index > 3))
@@ -17,7 +25,11 @@ class ByteOperations
         return ((value >> distance) & (0xFF as uint)) as byte
     }
 
-    /** Invalid indices preserve value. */
+    /**
+     * Replaces the byte at index with byteValue and returns the updated word.
+     *
+     * Valid indices are 0 through 3. An invalid index returns value unchanged.
+     */
     public static fn SetByte[](value: uint, index: int, byteValue: byte) uint
     {
         if ((index < 0) || (index > 3))
@@ -31,6 +43,11 @@ class ByteOperations
         return (value & ~mask) | positionedValue
     }
 
+    /**
+     * Exchanges the two bytes in the low 16 bits of value.
+     *
+     * Bits 31 through 16 are discarded and are zero in the returned uint.
+     */
     public static fn ByteSwap16[](value: uint) uint
     {
         var lowWord: uint = value & (0xFFFF as uint)

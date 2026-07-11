@@ -1,10 +1,17 @@
 namespace Eccelerators.BitTwiddling.Arithmetic
 
 /**
- * Fixed-width arithmetic with explicit overflow and carry behavior.
+ * Provides saturating and wrapping arithmetic for unsigned 32-bit values.
+ *
+ * Saturating operations clamp at the uint range boundary. Wrapping operations
+ * preserve normal 32-bit modular arithmetic. Separate predicates expose carry
+ * and borrow information without requiring state or output parameters.
  */
 class SaturatingArithmetic
 {
+    /**
+     * Adds x and y and saturates to 0xFFFFFFFF when unsigned overflow occurs.
+     */
     public static fn AddUnsigned[](x: uint, y: uint) uint
     {
         var result: uint = x + y
@@ -15,6 +22,9 @@ class SaturatingArithmetic
         return result
     }
 
+    /**
+     * Subtracts y from x and saturates to zero when y is greater than x.
+     */
     public static fn SubtractUnsigned[](x: uint, y: uint) uint
     {
         if (x < y)
@@ -24,22 +34,34 @@ class SaturatingArithmetic
         return x - y
     }
 
+    /**
+     * Adds x and y using modulo-2^32 arithmetic.
+     */
     public static fn AddWrapping[](x: uint, y: uint) uint
     {
         return x + y
     }
 
+    /**
+     * Returns true when adding x and y produces a carry beyond bit 31.
+     */
     public static fn HasAdditionCarry[](x: uint, y: uint) bool
     {
         var result: uint = x + y
         return result < x
     }
 
+    /**
+     * Subtracts y from x using modulo-2^32 arithmetic.
+     */
     public static fn SubtractWrapping[](x: uint, y: uint) uint
     {
         return x - y
     }
 
+    /**
+     * Returns true when subtracting y from x requires an unsigned borrow.
+     */
     public static fn HasSubtractionBorrow[](x: uint, y: uint) bool
     {
         return x < y

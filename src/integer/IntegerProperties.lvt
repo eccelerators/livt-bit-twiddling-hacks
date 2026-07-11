@@ -1,26 +1,50 @@
 namespace Eccelerators.BitTwiddling.Integer
 
 /**
- * Properties and transformations of signed and unsigned 32-bit integers.
+ * Provides common properties and transformations for fixed-width 32-bit
+ * integers.
+ *
+ * Functions use int only where signed interpretation is part of the contract;
+ * raw bit patterns and non-negative magnitudes use uint.
  */
 class IntegerProperties
 {
+    /**
+     * Returns a mask representing the sign of value.
+     *
+     * Non-negative values return 0. Negative values return -1, whose 32-bit
+     * two's-complement representation has every bit set.
+     */
     public static fn SignMask[](value: int) int
     {
         return value >> 31
     }
 
+    /**
+     * Returns true when x and y have different signs.
+     *
+     * Zero is non-negative, so zero and a negative value have opposite signs.
+     */
     public static fn HaveOppositeSigns[](x: int, y: int) bool
     {
         return (x ^ y) < 0
     }
 
+    /**
+     * Returns the unsigned magnitude of value.
+     *
+     * Returning uint allows the magnitude of -2147483648 to be represented as
+     * 0x80000000 instead of overflowing a signed int.
+     */
     public static fn AbsoluteValueBits[](value: int) uint
     {
         var mask: int = value >> 31
         return ((value + mask) ^ mask) as uint
     }
 
+    /**
+     * Returns the smaller of signed values x and y.
+     */
     public static fn Minimum[](x: int, y: int) int
     {
         if (x < y)
@@ -31,6 +55,9 @@ class IntegerProperties
         return y
     }
 
+    /**
+     * Returns the larger of signed values x and y.
+     */
     public static fn Maximum[](x: int, y: int) int
     {
         if (x > y)
@@ -41,6 +68,11 @@ class IntegerProperties
         return y
     }
 
+    /**
+     * Returns true when value is an exact positive power of two.
+     *
+     * Zero returns false. Every valid power of two has exactly one set bit.
+     */
     public static fn IsPowerOfTwo[](value: uint) bool
     {
         return (value != (0 as uint)) &&
@@ -48,8 +80,11 @@ class IntegerProperties
     }
 
     /**
-     * Returns the next power of two at or above value.
-     * Returns 1 for zero and 0 when the mathematical result exceeds 32 bits.
+     * Returns the smallest power of two greater than or equal to value.
+     *
+     * Zero returns 1. Values above 0x80000000 return 0 because the mathematical
+     * result cannot be represented by uint. Existing powers of two are returned
+     * unchanged.
      */
     public static fn RoundUpToPowerOfTwo[](value: uint) uint
     {
@@ -73,8 +108,11 @@ class IntegerProperties
     }
 
     /**
-     * Sign-extends the low bitWidth bits of value to a 32-bit int.
-     * Valid widths are 1 through 32; invalid widths return 0.
+     * Interprets the low bitWidth bits of value as a signed two's-complement
+     * number and sign-extends it to int.
+     *
+     * Valid widths are 1 through 32. Bits above bitWidth are ignored. Invalid
+     * widths return 0.
      */
     public static fn SignExtend[](value: uint, bitWidth: int) int
     {

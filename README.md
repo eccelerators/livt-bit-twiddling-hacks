@@ -179,6 +179,7 @@ livt test
 ```
 
 The package metadata enables all compiler warnings for debug and release builds.
+See the [API reference](docs/api.md) for complete return and boundary contracts.
 Short integration examples are available in [`docs/usage.md`](docs/usage.md).
 
 ## 🛠️ Development notes

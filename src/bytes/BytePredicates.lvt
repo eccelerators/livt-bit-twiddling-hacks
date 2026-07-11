@@ -1,10 +1,16 @@
 namespace Eccelerators.BitTwiddling.Bytes
 
 /**
- * Tests the four bytes of a 32-bit word independently.
+ * Provides parallel predicates and counts over the four bytes of a 32-bit word.
+ *
+ * Each helper treats value as four independent unsigned bytes without relying
+ * on pointer aliasing or host byte order.
  */
 class BytePredicates
 {
+    /**
+     * Returns true when at least one of value's four bytes equals zero.
+     */
     public static fn HasZeroByte[](value: uint) bool
     {
         return ((value & (0xFF as uint)) == (0 as uint)) ||
@@ -13,6 +19,9 @@ class BytePredicates
             (((value >> 24) & (0xFF as uint)) == (0 as uint))
     }
 
+    /**
+     * Returns true when at least one byte in value equals expected.
+     */
     public static fn HasByteEqual[](value: uint, expected: byte) bool
     {
         var expectedValue: uint = expected as uint
@@ -22,6 +31,9 @@ class BytePredicates
             (((value >> 24) & (0xFF as uint)) == expectedValue)
     }
 
+    /**
+     * Counts zero-valued bytes in value and returns a result from 0 through 4.
+     */
     public static fn CountZeroBytes[](value: uint) int
     {
         var count: int = 0

@@ -1,10 +1,20 @@
 namespace Eccelerators.BitTwiddling.Permutation
 
 /**
- * Creates two-dimensional Morton codes by interleaving 16-bit coordinates.
+ * Creates two-dimensional Morton, or Z-order, codes from integer coordinates.
+ *
+ * Morton codes preserve spatial locality by interleaving coordinate bits into
+ * one word. This class implements the common 16-bit-coordinate to 32-bit-code
+ * form.
  */
 class MortonCodes
 {
+    /**
+     * Interleaves the low 16 bits of xValue and yValue into a 32-bit Morton code.
+     *
+     * x bit n is written to result bit 2*n. y bit n is written to result bit
+     * 2*n + 1. Input bits above bit 15 are ignored.
+     */
     public static fn Interleave16[](xValue: uint, yValue: uint) uint
     {
         var x: uint = xValue & (0x0000FFFF as uint)

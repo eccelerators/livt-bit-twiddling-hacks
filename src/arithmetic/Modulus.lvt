@@ -1,13 +1,21 @@
 namespace Eccelerators.BitTwiddling.Arithmetic
 
 /**
- * Division-free remainder operations for power-of-two divisors.
+ * Provides division-free remainder operations for unsigned 32-bit values when
+ * the divisor is a power of two.
+ *
+ * These helpers replace a divider with a mask, which expresses the intended
+ * fixed-width hardware directly.
  */
 class Modulus
 {
     /**
-     * Computes value modulo 2^power.
-     * Power 0 returns 0; powers of 32 or more return value.
+     * Computes value modulo 2^power without using division.
+     *
+     * value is the unsigned dividend. power is the exponent of the divisor and
+     * normally lies in the range 0 through 32. Power values at or below zero
+     * return 0. Power values at or above 32 return value because every uint is
+     * already smaller than 2^32.
      */
     public static fn ModuloPowerOfTwo[](value: uint, power: int) uint
     {
@@ -25,6 +33,12 @@ class Modulus
         return value & mask
     }
 
+    /**
+     * Tests whether value is divisible by 2^power.
+     *
+     * This function follows ModuloPowerOfTwo's boundary policy. In particular,
+     * power values at or below zero report true because the remainder is zero.
+     */
     public static fn IsDivisibleByPowerOfTwo[](value: uint, power: int) bool
     {
         return Modulus.ModuloPowerOfTwo(value, power) == (0 as uint)
